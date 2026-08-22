@@ -1,0 +1,25 @@
+latency — 200 queries, generate=False, 2026-08-22 19:42
+failed requests: 0
+refusals: none
+
+COLD (first 20 requests)
+stage                 p50      p70     p100      n
+safety               0.02     0.02     0.03     20
+embed               17.25    18.50    56.89     20
+search               1.27     1.70     2.32     20
+fetch                0.12     0.14     3.91     20
+relevance            0.00     0.00     0.00     20
+--------------------------------------------------
+retrieval core      19.03    20.34    58.76     20
+full pipeline       19.62    20.87    59.29     20
+
+WARM (remaining 180)
+stage                 p50      p70     p100      n
+safety               0.02     0.02     0.04    180
+embed               18.07    19.34    54.73    180
+search               1.06     1.25     2.13    180
+fetch                0.12     0.13     4.43    180
+relevance            0.00     0.00     0.01    180
+--------------------------------------------------
+retrieval core      19.26    20.78    55.84    180
+full pipeline       19.81    21.30    56.35    180

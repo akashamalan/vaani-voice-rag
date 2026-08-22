@@ -30,7 +30,7 @@ class SarvamSTT:
             limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
         )
 
-    async def transcribe(self, audio: bytes | str, mime: str = "audio/wav") -> str:
+    async def transcribe(self, audio: bytes | str, mime: str = "audio/webm") -> str:
         """
         audio: raw bytes, or a base64 string as it arrives over the socket.
         Returns the transcript, or "" if Sarvam heard nothing.
@@ -38,11 +38,14 @@ class SarvamSTT:
         if isinstance(audio, str):
             audio = base64.b64decode(audio)
 
+        # derive filename extension from the actual MIME type
+        ext = mime.split("/")[-1].split(";")[0]   # "audio/webm" -> "webm"
+
         async def call():
             r = await self.client.post(
                 SARVAM_URL,
                 headers={"api-subscription-key": self._key},
-                files={"file": ("audio.wav", audio, mime)},
+                files={"file": (f"audio.{ext}", audio, mime)},
                 data={"model": SARVAM_MODEL,
                       "language_code": SARVAM_LANG.get(self.lang, "hi-IN")},
             )

@@ -69,12 +69,7 @@ MIN_TOP_SCORE = 0.80     # floor only. See above before changing this.
 # correct answers at 1.00.
 MIN_GROUNDING = 0.8
 
-# Second, independent check. Overlap ratios catch wholesale fabrication but
-# not entity substitution — "मुंबई भारत की राजधानी है" is 4/5 grounded and
-# only the entity is wrong. So every number, and every content token at
-# least this long, must appear verbatim in the retrieved passages.
-# Embeddings would be strictly worse here: "Mumbai is the capital" and
-# "Delhi is the capital" are neighbours in vector space.
+
 MIN_RARE_LEN = 4
 
 NOT_IN_CONTEXT = "NOT_IN_CONTEXT"

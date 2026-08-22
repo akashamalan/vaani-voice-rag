@@ -1,20 +1,4 @@
-"""
-Submission latency numbers.
 
-Loops real questions from qrels_hi.jsonl through /api/query and reports
-P50/P70/P100 per stage, plus two totals that mean different things:
-
-    retrieval core   embed + search + fetch   — what we control
-    full pipeline    total_ms                 — includes Groq generation
-
-Cold and warm are reported separately. The first requests after startup hit
-an unwarmed embedding model and page-fault the 2.6GB index off disk; mixing
-them into one percentile hides both numbers.
-
-Usage (server must already be running):
-    python -u benchmarks/latency_bench.py --n 200
-    python -u benchmarks/latency_bench.py --n 200 --no-generate   # retrieval only
-"""
 import argparse
 import json
 import random
