@@ -1,0 +1,77 @@
+{
+  "lang": "hi",
+  "n_queries": 500,
+  "n_passages": 8291,
+  "results": [
+    {
+      "strategy": "passage",
+      "chunks": 8291,
+      "chunks_per_passage": 1.0,
+      "index_mb": 12.1,
+      "recall@1": 0.284,
+      "recall@5": 0.73,
+      "recall@10": 0.854,
+      "recall@20": 0.906,
+      "mrr": 0.4699,
+      "cut_s": 0.1,
+      "embed_s": 32.4,
+      "search_ms_p50": 1.25
+    },
+    {
+      "strategy": "sliding_window",
+      "chunks": 10262,
+      "chunks_per_passage": 1.24,
+      "index_mb": 15.0,
+      "recall@1": 0.278,
+      "recall@5": 0.724,
+      "recall@10": 0.852,
+      "recall@20": 0.904,
+      "mrr": 0.4619,
+      "cut_s": 0.1,
+      "embed_s": 30.7,
+      "search_ms_p50": 1.2
+    },
+    {
+      "strategy": "semantic",
+      "chunks": 15137,
+      "chunks_per_passage": 1.83,
+      "index_mb": 22.2,
+      "recall@1": 0.268,
+      "recall@5": 0.7,
+      "recall@10": 0.832,
+      "recall@20": 0.882,
+      "mrr": 0.4431,
+      "cut_s": 217.7,
+      "embed_s": 15.6,
+      "search_ms_p50": 1.87
+    },
+    {
+      "strategy": "metadata_aware",
+      "chunks": 30022,
+      "chunks_per_passage": 3.62,
+      "index_mb": 44.0,
+      "recall@1": 0.25,
+      "recall@5": 0.662,
+      "recall@10": 0.78,
+      "recall@20": 0.824,
+      "mrr": 0.4195,
+      "cut_s": 1.2,
+      "embed_s": 22.3,
+      "search_ms_p50": 3.58
+    },
+    {
+      "strategy": "sentence_window",
+      "chunks": 30022,
+      "chunks_per_passage": 3.62,
+      "index_mb": 44.0,
+      "recall@1": 0.27,
+      "recall@5": 0.66,
+      "recall@10": 0.77,
+      "recall@20": 0.83,
+      "mrr": 0.4334,
+      "cut_s": 1.0,
+      "embed_s": 34.4,
+      "search_ms_p50": 3.08
+    }
+  ]
+}

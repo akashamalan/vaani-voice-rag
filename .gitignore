@@ -1,0 +1,38 @@
+# ---- secrets -------------------------------------------------------------
+.env
+.env.*
+*.key
+*.pem
+secrets.json
+
+# ---- python --------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# ---- build artifacts -----------------------------------------------------
+# The index and embeddings live OUTSIDE the repo, at ~/voice-rag-artifacts,
+# deliberately: 3.4GB, and a memory-mapped LMDB under a sync client corrupts.
+# This entry only catches the case where someone recreates it in-tree.
+artifacts/
+*.faiss
+*.npy
+*.lmdb/
+*.mdb
+
+# ---- node ----------------------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/node_modules/
+npm-debug.log*
+.vite/
+
+# ---- editor / os ---------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
