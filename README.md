@@ -1,8 +1,7 @@
 # वाणी — Voice RAG
 -----------------------------------------------------------------------------
 The Live Link Is : https://mel-releases-yard-terrorists.trycloudflare.com/  |
-                                                                            |
-(because some issue, Now it's Completed)                                    |
+                                                                            |   
 -----------------------------------------------------------------------------
 
 Voice-enabled Retrieval-Augmented Generation over MSMARCO-XI (Hindi).
