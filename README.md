@@ -1,6 +1,6 @@
 # वाणी — Voice RAG
 -----------------------------------------------------------------------------
-https://maryland-divisions-rolling-sensor.trycloudflare.com                 |
+https://sentences-choir-script-organizations.trycloudflare.com              |
                                                                             |   
 -----------------------------------------------------------------------------
 
