@@ -18,8 +18,12 @@ LANG = os.environ.get("VOICE_RAG_LANG", "hi")
 # ---------------------------------------------------------------- retrieval
 EMBED_MODEL = "intfloat/multilingual-e5-small"
 EMBED_DEVICE = os.environ.get("VOICE_RAG_DEVICE", "cpu")   # the VPS has no GPU
-EF_SEARCH = 64          # measured: matches exact search, 1.0ms/query
-TOP_K = 5
+# efSearch 256 measured 0.610 recall@10 vs 0.590 at 64, for ~2ms. On the
+# 500k build 64 was enough; at 1.485M the extra breadth pays for itself.
+EF_SEARCH = 256
+# k=5 measured a 65% miss rate on 20 qrels queries. recall@10 is 0.590 vs
+# ~0.35 at k=5 — the correct passage is often at rank 5-9.
+TOP_K = 10
 
 # ---------------------------------------------------------------- upstreams
 SARVAM_URL = "https://api.sarvam.ai/speech-to-text"

@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
-const WS_URL = import.meta.env.VITE_WS_URL || "ws://localhost:8000/ws/query";
+// Same-origin by default: works behind ANY tunnel hostname with no rebuild.
+const WS_URL = import.meta.env.VITE_WS_URL ||
+  `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws/query`;
 const BUDGET_MS = 200;
 
 const LOCAL = new Set(["safety", "embed", "search", "fetch", "relevance", "grounding"]);

@@ -14,9 +14,11 @@ key it needs rather than failing somewhere deep in a stack trace.
 """
 import json
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.config import ARTIFACTS, EF_SEARCH, EMBED_DEVICE, LANG, TOP_K
 from app.generation.generator import GroqGenerator
@@ -168,3 +170,19 @@ async def ws_query(ws: WebSocket):
             await ws.send_json(ev_error(f"{type(exc).__name__}: {exc}"))
         except Exception:                                     # noqa: BLE001
             pass
+
+
+# ---------------------------------------------------------------- frontend
+# MUST be registered last. Starlette matches routes in registration order, so
+# a mount at "/" declared earlier would swallow /health, /api/query and
+# /ws/query before they were ever reached.
+#
+# Serving the built SPA from the same origin means one tunnel, one URL, and no
+# CORS. Build it first:  npm run build --prefix frontend
+_DIST = Path(__file__).resolve().parents[1] / "frontend" / "dist"
+if (_DIST / "index.html").exists():
+    app.mount("/", StaticFiles(directory=str(_DIST), html=True), name="frontend")
+    print(f"[static] serving {_DIST}")
+else:
+    print(f"[static] {_DIST} not built — root will 404. "
+          f"Run: npm run build --prefix frontend")
