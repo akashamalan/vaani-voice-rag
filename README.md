@@ -1,6 +1,6 @@
 # वाणी — Voice RAG
 -----------------------------------------------------------------------------
-https://sentences-choir-script-organizations.trycloudflare.com              |
+https://ongoing-pair-feedback-potter.trycloudflare.com                      |
                                                                             |   
 -----------------------------------------------------------------------------
 
