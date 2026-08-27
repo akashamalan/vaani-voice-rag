@@ -12,15 +12,20 @@ The server starts even when SARVAM_API_KEY or GROQ_API_KEY are missing, so
 retrieval can be tested in isolation. Each endpoint reports clearly which
 key it needs rather than failing somewhere deep in a stack trace.
 """
+import asyncio
+import ctypes
 import json
+import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
+from time import perf_counter
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.config import ARTIFACTS, EF_SEARCH, EMBED_DEVICE, LANG, TOP_K
+from app.config import (ARTIFACTS, EF_SEARCH, EMBED_DEVICE, KEEPALIVE_SECONDS,
+                        LANG, PIN_WORKING_SET_GB, TOP_K)
 from app.generation.generator import GroqGenerator
 from app.harness.pipeline import run_pipeline
 from app.harness.schemas import (PassageOut, QueryRequest, QueryResponse,
@@ -30,9 +35,72 @@ from app.stt.sarvam import SarvamSTT
 
 STATE: dict = {"store": None, "gen": None, "stt": None, "missing": []}
 
+# Deliberately varied: HNSW visits only the nodes along its search path, so
+# repeating one query would keep re-touching the same ~12MB of the graph.
+# Different topics enter the graph at different points and hold more of it.
+KEEPALIVE_QUERIES = [
+    "भारत की राजधानी क्या है",
+    "कंप्यूटर सॉफ्टवेयर कैसे काम करता है",
+    "स्वास्थ्य और पोषण के लाभ",
+    "इतिहास में प्रसिद्ध युद्ध",
+    "बैंक ऋण की ब्याज दर",
+]
+
+
+def _pin_working_set(gb: float) -> str:
+    """
+    Forbid Windows from trimming the working set below `gb`.
+
+    This is the mitigation that actually works. The keepalive keeps the hot
+    path warm; only a hard minimum stops the OS reclaiming the rest of the
+    2.6GB index while the process is idle. Verified settable without admin.
+    """
+    if gb <= 0:
+        return "disabled"
+    if sys.platform != "win32":
+        return "skipped (not windows)"
+    try:
+        import ctypes.wintypes as w
+        k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        k32.GetCurrentProcess.restype = w.HANDLE
+        set_ex = k32.SetProcessWorkingSetSizeEx
+        set_ex.argtypes = [w.HANDLE, ctypes.c_size_t, ctypes.c_size_t, w.DWORD]
+        HARD_MIN, NO_HARD_MAX = 0x00000001, 0x00000008
+        lo = int(gb * 1024 ** 3)
+        ok = set_ex(k32.GetCurrentProcess(), lo, int(lo * 1.5),
+                    HARD_MIN | NO_HARD_MAX)
+        if not ok:
+            return f"FAILED (winerr {ctypes.get_last_error()})"
+        return f"min {gb:.1f}GB pinned"
+    except Exception as exc:                                  # noqa: BLE001
+        return f"unavailable ({type(exc).__name__}: {exc})"
+
+
+async def _keepalive():
+    """Real retrieval on a timer. No Groq — retrieval only, no quota spent."""
+    i = 0
+    while True:
+        await asyncio.sleep(KEEPALIVE_SECONDS)
+        store = STATE.get("store")
+        if store is None:
+            continue
+        q = KEEPALIVE_QUERIES[i % len(KEEPALIVE_QUERIES)]
+        i += 1
+        try:
+            t0 = perf_counter()
+            await asyncio.to_thread(store.search, q, 5)
+            print(f"[keepalive] {(perf_counter()-t0)*1000:.1f} ms")
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:                              # noqa: BLE001
+            print(f"[keepalive] failed: {type(exc).__name__}: {exc}")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # before load, so the index is faulted into an already-protected set
+    print(f"[workingset] {_pin_working_set(PIN_WORKING_SET_GB)}")
+
     STATE["store"] = VectorStore(lang=LANG, artifacts=ARTIFACTS,
                                  ef_search=EF_SEARCH,
                                  device=EMBED_DEVICE).load()
@@ -45,7 +113,16 @@ async def lifespan(app: FastAPI):
             STATE["missing"].append(name)
             print(f"[warn] {exc}")
 
+    ka = asyncio.create_task(_keepalive())
+    print(f"[keepalive] every {KEEPALIVE_SECONDS}s, retrieval only")
+
     yield
+
+    ka.cancel()
+    try:
+        await ka
+    except asyncio.CancelledError:
+        pass
 
     for key in ("gen", "stt"):
         obj = STATE.get(key)

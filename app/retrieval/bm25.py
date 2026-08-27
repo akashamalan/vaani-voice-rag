@@ -7,12 +7,13 @@ so there is no dense-side knob to turn. Lexical retrieval fails differently
 from dense retrieval (exact term match vs semantic proximity), which is the
 only reason fusing them can beat either alone.
 
+MEASURED OUTCOME: RRF hybrid reached 0.590 recall@10 vs 0.530 dense-at-k10,
+but plain dense at k=20 reached 0.600 for no extra latency, while BM25 search
+alone costs 28ms p50 / 203ms p100. Dense k=20 dominates. This module is kept
+as the evidence for that decision, not as the shipping retrieval path.
+
 No re-embedding and no reindex: the passage text is already in passages.lmdb,
 keyed by the same doc_id the dense index returns.
-
-Tokenizer note: the default \\w+ splitter is not safe here. Devanagari must be
-named explicitly or Hindi tokens are silently mangled, which would produce a
-BM25 index that looks fine and matches nothing.
 
 Build (about 10 minutes, memory-hungry):
     python -m app.retrieval.bm25 --build
@@ -26,8 +27,10 @@ import lmdb
 
 from app.config import ARTIFACTS, LANG
 
-# Devanagari U+0900-U+097F, plus ASCII alphanumerics for the many passages
-# that carry English proper nouns and figures.
+# Devanagari U+0900-U+097F named explicitly, plus ASCII alphanumerics for the
+# English proper nouns and figures scattered through these passages. The
+# default \w+ splitter would silently mangle Hindi and produce an index that
+# looks fine and matches nothing.
 TOKEN_RE = r"[0-9A-Za-zऀ-ॿ]+"
 _TOKEN = re.compile(TOKEN_RE)
 

@@ -42,6 +42,23 @@ GROQ_TEMPERATURE = 0.2
 HTTP_TIMEOUT = 30.0
 RETRY_ATTEMPTS = 3
 
+# ------------------------------------------------------------- cold start
+# Windows trims an idle process's working set. Measured: the server fell to
+# 153MB while the FAISS index alone is 2.6GB, and the next visitor paid
+# 1794-2708ms in vector search while pages faulted back from the pagefile.
+#
+# Two mitigations, because neither is sufficient alone:
+#   KEEPALIVE_SECONDS  periodic real retrieval. Keeps the model and the
+#                      graph's upper layers hot — but ONE HNSW search only
+#                      touches roughly efSearch*M nodes (~12MB of 2.6GB), so
+#                      it cannot hold the whole index by itself.
+#   PIN_WORKING_SET_GB SetProcessWorkingSetSizeEx with a HARD minimum, which
+#                      is what actually forbids the trim. Verified settable
+#                      without admin on this machine. Cost: that much RAM is
+#                      reserved from everything else. Set 0 to disable.
+KEEPALIVE_SECONDS = 180
+PIN_WORKING_SET_GB = float(os.environ.get("VOICE_RAG_PIN_GB", "3.5"))
+
 # ---------------------------------------------------------------- guardrails
 # Off-topic detection is THREE layers, not one. Each catches what the others
 # cannot, and the reason this is not a single tuned number is measured:
