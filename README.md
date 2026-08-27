@@ -1,6 +1,6 @@
 # वाणी — Voice RAG
 -----------------------------------------------------------------------------
-LIve Link : https://pride-breaking-carpet-stood.trycloudflare.com            |
+LIve Link : https://latest-adelaide-factory-dat.trycloudflare.com/          |
                                                                             |   
 -----------------------------------------------------------------------------
 
