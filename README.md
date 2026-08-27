@@ -1,6 +1,6 @@
 # वाणी — Voice RAG
 -----------------------------------------------------------------------------
-https://ongoing-pair-feedback-potter.trycloudflare.com                      |
+https://update-directories-handed-conscious.trycloudflare.com               |
                                                                             |   
 -----------------------------------------------------------------------------
 
