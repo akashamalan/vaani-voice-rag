@@ -1,6 +1,6 @@
 वाणी — Voice RAG
 -----------------------------------------------------------------------------
-LIve Link : https://observations-promotes-simon-chancellor.trycloudflare.com/|
+LIve Link : https://observations-promotes-simon-chancellor.trycloudflare.com/ |
                                                                             |   
 -----------------------------------------------------------------------------
 
