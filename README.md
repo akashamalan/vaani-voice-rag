@@ -1,4 +1,4 @@
-<img width="1919" height="917" alt="image" src="https://github.com/user-attachments/assets/689d51ef-f979-4b8b-ad55-0c5c68b364f7" /># वाणी — Voice RAG
+वाणी — Voice RAG
 -----------------------------------------------------------------------------
 LIve Link : https://corrections-oval-makes-friends.trycloudflare.com        |
                                                                             |   
