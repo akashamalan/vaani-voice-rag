@@ -1,8 +1,8 @@
 वाणी — Voice RAG
------------------------------------------------------------------------------
-LIve Link : https://observations-promotes-simon-chancellor.trycloudflare.com/ |
-                                                                            |   
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+LIve Link : https://earnings-mathematical-issued-withdrawal.trycloudflare.com/ |
+                                                                               |   
+-------------------------------------------------------------------------------
 
 Voice-enabled Retrieval-Augmented Generation over MSMARCO-XI (Hindi).
 Speak a question, get an answer grounded in retrieved passages.
