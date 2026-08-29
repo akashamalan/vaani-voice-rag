@@ -1,6 +1,6 @@
 वाणी — Voice RAG
 -------------------------------------------------------------------------------
-LIve Link : https://television-agreements-wells-depend.trycloudflare.com/      |
+LIve Link : https://mortality-dan-expenditure-spa.trycloudflare.com/           |
                                                                                |   
 -------------------------------------------------------------------------------
 
