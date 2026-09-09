@@ -1,8 +1,4 @@
 वाणी — Voice RAG
--------------------------------------------------------------------------------
-LIve Link :  https://stay-ago-twisted-irrigation.trycloudflare.com             |
-                                                                               |   
--------------------------------------------------------------------------------
 
 Voice-enabled Retrieval-Augmented Generation over MSMARCO-XI (Hindi).
 Speak a question, get an answer grounded in retrieved passages.
